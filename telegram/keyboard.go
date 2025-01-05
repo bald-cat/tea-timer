@@ -32,6 +32,7 @@ func GetStartButtons() []string {
 	return []string{
 		texts.Text("start-button"),
 		texts.Text("info-button"),
+		texts.Text("first-info-button"),
 	}
 }
 

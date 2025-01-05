@@ -47,6 +47,7 @@ func routes(telegram *telegram.Telegram) []Route {
 		{Case: texts.Text("reset-timer-button"), Action: telegram.ResetTimer},
 		{Case: texts.Text("plus-timer-button"), Action: telegram.PlusTimer},
 		{Case: texts.Text("minus-timer-button"), Action: telegram.MinusTimer},
+		{Case: texts.Text("first-info-button"), Action: telegram.FirstInfoAction},
 	}
 
 	return routes

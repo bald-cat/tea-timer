@@ -24,6 +24,15 @@ func (t *Telegram) InfoAction(request TgRequest) {
 	t.SendMessage(request)
 }
 
+func (t *Telegram) FirstInfoAction(request TgRequest) {
+	request.Text = texts.Text("first-info")
+
+	buttons := GetStartButtons()
+
+	request.setMarkupButtons(buttons)
+	t.SendMessage(request)
+}
+
 func (t *Telegram) StartTeaPartyAction(request TgRequest) {
 	request.Text = texts.Text("start-timer")
 	buttons := GetBaseButtons()
@@ -39,7 +48,7 @@ func (t *Telegram) StartTimer(request TgRequest) {
 	duration := timerByChatId.Duration
 	timerByChatId.AddDuration(time.Second * 15)
 	time.AfterFunc(duration, func() {
-		request.Text = fmt.Sprintf("Время вышло, следующий таймер будет запущен на  %v", timerByChatId.Duration)
+		request.Text = fmt.Sprintf(texts.Text("timer-end"), timerByChatId.Duration)
 
 		buttons := GetBaseButtons()
 
