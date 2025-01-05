@@ -26,15 +26,7 @@ func (t *Telegram) InfoAction(request TgRequest) {
 
 func (t *Telegram) StartTeaPartyAction(request TgRequest) {
 	request.Text = texts.Text("start-timer")
-
-	buttons := []string{
-		texts.Text("start-timer-button"),
-		texts.Text("plus-timer-button"),
-		texts.Text("minus-timer-button"),
-		texts.Text("reset-timer-button"),
-		texts.Text("first-info"),
-	}
-
+	buttons := GetBaseButtons()
 	request.setMarkupButtons(buttons)
 	t.SendMessage(request)
 }
@@ -49,12 +41,7 @@ func (t *Telegram) StartTimer(request TgRequest) {
 	time.AfterFunc(duration, func() {
 		request.Text = fmt.Sprintf("Время вышло, следующий таймер будет запущен на  %v", timerByChatId.Duration)
 
-		buttons := []string{
-			texts.Text("start-timer-button"),
-			texts.Text("plus-timer-button"),
-			texts.Text("minus-timer-button"),
-			texts.Text("reset-timer-button"),
-		}
+		buttons := GetBaseButtons()
 
 		request.setMarkupButtons(buttons)
 		log.Printf(strconv.FormatInt(request.LastMessageId, 10))
@@ -68,12 +55,7 @@ func (t *Telegram) ResetTimer(request TgRequest) {
 	timerByChatId.ResetDuration()
 	request.Text = fmt.Sprintf("Таймер сброшен, следующий таймер будет запущен на  %v", timerByChatId.Duration)
 
-	buttons := []string{
-		texts.Text("start-timer-button"),
-		texts.Text("plus-timer-button"),
-		texts.Text("minus-timer-button"),
-		texts.Text("reset-timer-button"),
-	}
+	buttons := GetBaseButtons()
 
 	request.setMarkupButtons(buttons)
 	t.SendMessage(request)
@@ -84,12 +66,7 @@ func (t *Telegram) PlusTimer(request TgRequest) {
 	timerByChatId.AddDuration(time.Second * 5)
 	request.Text = fmt.Sprintf("Время увеличено, следующий таймер будет запущен на  %v", timerByChatId.Duration)
 
-	buttons := []string{
-		texts.Text("start-timer-button"),
-		texts.Text("plus-timer-button"),
-		texts.Text("minus-timer-button"),
-		texts.Text("reset-timer-button"),
-	}
+	buttons := GetBaseButtons()
 
 	request.setMarkupButtons(buttons)
 	t.SendMessage(request)
@@ -100,12 +77,7 @@ func (t *Telegram) MinusTimer(request TgRequest) {
 	timerByChatId.MinusDuration(time.Second * 5)
 	request.Text = fmt.Sprintf("Время уменьшено, следующий таймер будет запущен на  %v", timerByChatId.Duration)
 
-	buttons := []string{
-		texts.Text("start-timer-button"),
-		texts.Text("plus-timer-button"),
-		texts.Text("minus-timer-button"),
-		texts.Text("reset-timer-button"),
-	}
+	buttons := GetBaseButtons()
 
 	request.setMarkupButtons(buttons)
 	t.SendMessage(request)

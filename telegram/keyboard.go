@@ -34,3 +34,12 @@ func GetStartButtons() []string {
 		texts.Text("info-button"),
 	}
 }
+
+func GetBaseButtons() []string {
+	return []string{
+		texts.Text("start-timer-button"),
+		texts.Text("plus-timer-button"),
+		texts.Text("minus-timer-button"),
+		texts.Text("reset-timer-button"),
+	}
+}
