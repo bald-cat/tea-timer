@@ -66,7 +66,7 @@ func (t *Telegram) PlusTimer(request TgRequest) {
 	timerByChatId.AddDuration(time.Second * 5)
 	request.Text = fmt.Sprintf("Время увеличено, следующий таймер будет запущен на  %v", timerByChatId.Duration)
 
-	buttons := GetBaseButtons()
+	buttons := GetStartButtons()
 
 	request.setMarkupButtons(buttons)
 	t.SendMessage(request)
