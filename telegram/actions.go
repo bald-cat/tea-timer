@@ -53,7 +53,7 @@ func (t *Telegram) StartTimer(request TgRequest) {
 func (t *Telegram) ResetTimer(request TgRequest) {
 	timerByChatId := t.Timers.GetTimerByChatId(request.ChatID)
 	timerByChatId.ResetDuration()
-	request.Text = fmt.Sprintf("Таймер сброшен, следующий таймер будет запущен на  %v", timerByChatId.Duration)
+	request.Text = texts.Text("reset")
 
 	buttons := GetStartButtons()
 
