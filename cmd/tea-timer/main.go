@@ -5,8 +5,9 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"tgbot/router"
-	"tgbot/telegram"
+	"tea-timer/internal/bot"
+	"tea-timer/internal/router"
+	"tea-timer/internal/telegram"
 )
 
 func main() {
@@ -15,7 +16,9 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	var tg = telegram.NewTelegram()
+	telegramClient := telegram.NewClient()
+	botInstance := bot.NewBot(telegramClient)
+	routerInstance := router.NewRouter(botInstance)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +42,7 @@ func main() {
 			return
 		}
 
-		router.NewRouter(tg, request)
+		routerInstance.Handle(request)
 	})
 
 	srv := &http.Server{
@@ -52,5 +55,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
