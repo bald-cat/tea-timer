@@ -1,4 +1,4 @@
-package telegram
+package config
 
 import "os"
 
@@ -16,6 +16,6 @@ func NewConfig() *Config {
 	}
 }
 
-func (c *Config) getTelegramRequestUrl() string {
+func (c *Config) GetTelegramRequestUrl() string {
 	return c.BaseUrl + c.Token + "/"
 }

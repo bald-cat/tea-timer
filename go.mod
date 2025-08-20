@@ -1,4 +1,4 @@
-module tgbot
+module tea-timer
 
 go 1.21
 

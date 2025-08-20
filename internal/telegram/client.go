@@ -7,31 +7,32 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"tgbot/timer"
+	"tea-timer/internal/config"
+	"tea-timer/internal/domain/timer"
 )
 
-type Telegram struct {
-	Config *Config
-	Client *http.Client
-	Timers *timer.Timers
+type Client struct {
+	Config     *config.Config
+	HttpClient *http.Client
+	Timers     *timer.Timers
 }
 
-func NewTelegram() *Telegram {
-	tg := &Telegram{
-		Config: NewConfig(),
-		Client: http.DefaultClient,
-		Timers: timer.NewTimers(),
+func NewClient() *Client {
+	client := &Client{
+		Config:     config.NewConfig(),
+		HttpClient: http.DefaultClient,
+		Timers:     timer.NewTimers(),
 	}
 
-	tg.DeleteWebhook()
-	tg.SetWebhook()
+	client.DeleteWebhook()
+	client.SetWebhook()
 
-	return tg
+	return client
 }
 
-func (t *Telegram) SendRequest(method string) int64 {
-	queryUrl := t.getTelegramRequestUrl() + method
-	response, err := t.Client.Get(queryUrl)
+func (c *Client) SendRequest(method string) int64 {
+	queryUrl := c.Config.GetTelegramRequestUrl() + method
+	response, err := c.HttpClient.Get(queryUrl)
 	if err != nil {
 		log.Println("Error getting bot info:", err)
 	}
@@ -54,27 +55,23 @@ func (t *Telegram) SendRequest(method string) int64 {
 	return res.Result.MessageID
 }
 
-func (t *Telegram) getTelegramRequestUrl() string {
-	return t.Config.BaseUrl + t.Config.Token + "/"
+func (c *Client) GetBotInfo() {
+	c.SendRequest("getMe")
 }
 
-func (t *Telegram) GetBotInfo() {
-	t.SendRequest("getMe")
+func (c *Client) SetWebhook() {
+	c.SendRequest("setWebhook?url=" + c.Config.WebhookUrl)
 }
 
-func (t *Telegram) SetWebhook() {
-	t.SendRequest("setWebhook?url=" + t.Config.WebhookUrl)
+func (c *Client) GetWebhookInfo() {
+	c.SendRequest("getWebhookInfo")
 }
 
-func (t *Telegram) GetWebhookInfo() {
-	t.SendRequest("getWebhookInfo")
+func (c *Client) DeleteWebhook() {
+	c.SendRequest("deleteWebhook?drop_pending_updates")
 }
 
-func (t *Telegram) DeleteWebhook() {
-	t.SendRequest("deleteWebhook?drop_pending_updates")
-}
-
-func (t *Telegram) SendMessage(request TgRequest) int64 {
+func (c *Client) SendMessage(request TgRequest) int64 {
 	params := url.Values{}
 	params.Set("chat_id", strconv.FormatInt(request.ChatID, 10))
 	params.Set("text", request.Text)
@@ -93,11 +90,11 @@ func (t *Telegram) SendMessage(request TgRequest) int64 {
 
 	u := "sendMessage?" + queryString
 
-	messageId := t.SendRequest(u)
+	messageId := c.SendRequest(u)
 	return messageId
 }
 
-func (t *Telegram) DeleteMessage(request TgRequest) {
+func (c *Client) DeleteMessage(request TgRequest) {
 	params := url.Values{}
 	params.Set("chat_id", strconv.FormatInt(request.ChatID, 10))
 	params.Set("message_id", strconv.FormatInt(request.LastMessageId, 10))
@@ -106,5 +103,5 @@ func (t *Telegram) DeleteMessage(request TgRequest) {
 
 	u := "deleteMessage?" + queryString
 
-	t.SendRequest(u)
+	c.SendRequest(u)
 }

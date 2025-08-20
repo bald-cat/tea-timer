@@ -1,6 +1,24 @@
 package telegram
 
-import "tgbot/texts"
+type WebhookMessage struct {
+	Message struct {
+		MessageID int64 `json:"message_id"`
+		From      struct {
+			Username string `json:"username"`
+		} `json:"from"`
+		Chat struct {
+			ID int64 `json:"id"`
+		} `json:"chat"`
+		Text string `json:"text"`
+	} `json:"message"`
+}
+
+type Response struct {
+	OK     bool `json:"ok"`
+	Result struct {
+		MessageID int64 `json:"message_id"`
+	}
+}
 
 type InlineKeyboardMarkup struct {
 	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
@@ -28,19 +46,11 @@ type ForceReply struct {
 	ForceReply bool `json:"force_reply"`
 }
 
-func GetStartButtons() []string {
-	return []string{
-		texts.Text("start-button"),
-		texts.Text("info-button"),
-		texts.Text("first-info-button"),
-	}
-}
-
-func GetBaseButtons() []string {
-	return []string{
-		texts.Text("start-timer-button"),
-		texts.Text("plus-timer-button"),
-		texts.Text("minus-timer-button"),
-		texts.Text("reset-timer-button"),
-	}
+type TgRequest struct {
+	ChatID        int64
+	LastMessageId int64
+	Text          string
+	IsCallback    bool
+	ParseMode     string
+	ReplyMarkup   interface{} `json:"reply_markup,omitempty"`
 }
